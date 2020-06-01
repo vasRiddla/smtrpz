@@ -1,1 +1,187 @@
+import java.util.ArrayList;
+import java.util.List;
+public class Vehicle<T>
+{
+	public List<T> occupants = new ArrayList<>();
+	public String type;
+    public int seats;
+    public int occupiedNum;
+    public int freeNum;
+	public Vehicle(String type, int seats) {
+        this.type = type;
+        this.seats = seats;
+    }
+    public int checkFree() {
+        return freeNum;
+    }
+    public int checkOccupied() {
+        return occupiedNum;
+    }
+	public void newHuman(T Human) throws FullException {
+        if (checkFree() == 0)
+        {
+        	throw new FullException("The vehicle has run out of space.");
+        }
+        if (checkOccupied() == 0)
+        {
+        	throw new FullException("Currently there are " + occupiedNum + "occupied slots");
+        }
+        occupants.add(Human);
+        occupiedNum += 1;
+        freeNum -= 1;
+    }
+	
+}
 
+public class Human {
+    public int ID;
+    public String type;
+    public int amount;
+    public Human(int ID, String type) {
+        this.ID = ID;
+        this.type = type;
+    }
+    Human()
+    {
+        amount += 1;
+    }
+	public int humAmount() {
+		amount += 1;
+		return amount;
+	}
+}
+
+public class HumanFire {
+    public int ID;
+    public boolean squad;
+    public int amount;
+    public HumanFire(int ID, boolean squad) {
+        this.ID = ID;
+        this.squad = squad;
+    }
+    HumanFire()
+    {
+        amount += 1;
+    }
+}
+
+public class HumanPolice {
+    public int ID;
+    public boolean squad;
+    public int amount;
+    public HumanPolice(int ID, boolean squad) {
+    	this.ID = ID;
+    	this.squad = squad;
+    }
+    HumanPolice()
+    {
+        amount += 1;
+    }
+}
+
+public class Police<T extends Human> extends Car<T>
+{
+	Police(String type, int seats)
+    {
+        super(type, seats);
+    }
+}
+
+public class Car<T extends Human> extends Vehicle<T>
+{
+    Car(String type, int seats)
+    {
+        super(type, seats);
+    }
+}
+
+public class Bus<T extends Human> extends Vehicle<T>
+{
+    Bus(String type, int seats)
+    {
+        super(type, seats);
+    }
+}
+
+public class Firetruck<T extends Human> extends Vehicle<T>
+{
+    Firetruck(String type, int seats)
+    {
+        super(type, seats);
+    }
+}
+
+public class FullException extends RuntimeException {
+	 public FullException(String msg) {
+	        super(msg);
+	}
+}
+
+
+import java.util.ArrayList;
+
+public class Road <T extends Vehicle> {
+    public ArrayList<Vehicle> carsDeployed = new ArrayList<>();
+    public int getTotal()
+    {
+    	int humanAmount = Human.get(0).amount();
+        return humanAmount;
+    }
+    public void addCarToRoad(Vehicle cars)
+    {
+        carsDeployed.add(cars);
+    }
+}
+
+public class Taxi<T extends Human> extends Vehicle<T>
+{
+    Taxi(String type, int seats)
+    {
+        super(type, seats);
+    }
+}
+
+public class RoadDeploy
+{
+    public static void main(String[] args)
+    {
+	Road road = new Road();
+    HumanPolice police = new HumanPolice();
+    Police polCar = new Police("A4", 15);
+    polCar.newHuman(police);
+    road.addCarToRoad(polCar);
+    
+    HumanFire fireman = new HumanFire();
+    Firetruck fire = new Firetruck("C7", 15);
+    fire.newHuman(fire);
+    road.addCarToRoad(fire);
+    
+    HumanFire taxifire = new HumanFire();
+    Taxi taxi = new Taxi("B7", 25);
+    taxi.newHuman(taxifire);
+    road.addCarToRoad(taxi);
+    
+    HumanFire firebus = new HumanFire();
+    Bus bus = new Bus("A8", 25);
+    fire.newHuman(firebus);
+    road.addCarToRoad(bus);
+}
+}
+
+public class JUnit {
+	@Test
+	public void getTotal()
+    {
+	Road road;
+    Human fireman, policeman, person;
+    Vehicle fire, polCar, taxi, bus;
+    fire.newHuman(fireman);
+    polCar.newHuman(policeman);
+    bus.newHuman(person);
+    taxi.newHuman(person);
+    road.addCarToRoad(polCar);
+    road.addCarToRoad(taxi);
+    road.addCarToRoad(bus);
+    assertEquals(3, road.getTotal());
+    }
+}
