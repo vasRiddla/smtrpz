@@ -27,10 +27,26 @@ public class test {
 	       inputStream.close();
 	       outputStream.close();
 
-	    } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException| IllegalBlockSizeException | IOException e) {e.printStackTrace();}
+	    } 
+	    catch (IOException ex)
+	    {
+	    throw new CryptoException("Error has occured. Please try again.", ex);
+	    }
      }
 }
 	
+
+public class CryptoException extends Exception {
+ 
+    public CryptoException() {
+    }
+    public CryptoException(String message, Throwable throwable) {
+        super(message, throwable);
+    }
+}
+
+
+
 
 
 import javax.crypto.Cipher;
