@@ -1,7 +1,5 @@
 public class Carlos {
 	public static double getPi(int numThrows){
-		int threads = 8;
-        int iterations = 1000000000;
 		int inCircle= 0;
 		for(int i= 0;i < numThrows;i++){
 			double randX= (Math.random() * 2) - 1;
