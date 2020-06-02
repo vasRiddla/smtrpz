@@ -1,16 +1,4 @@
 public class Carlos {
-	public static double getPi(int numThrows){
-		int inCircle= 0;
-		for(int i= 0;i < numThrows;i++){
-			double randX= (Math.random() * 2) - 1;
-			double randY= (Math.random() * 2) - 1;
-			double dist= Math.sqrt(randX * randX + randY * randY);
-			if(dist < 1){
-				inCircle++;
-			}
-		}
-		return (4.0 * inCircle) / numThrows;
-	}
 	public static void main(String[] args) {
 	int iterations = 100000;
 	int threads = 8;
