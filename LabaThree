@@ -1,0 +1,174 @@
+import java.util.GregorianCalendar;
+import java.util.Random;
+public class CardDetails {
+	Random rand = new Random();
+	public static List<CardDetails> blacklist = new ArrayList<>();
+	public static List<CardDetails> success = new ArrayList<>();
+	public static int cardID;
+	public static int IDs = 0;
+	public static int ridePrice = 100;
+	public static String cardClass;
+	public static String cardType;
+	public static String cardPrintDate;
+	public static String cardLeftDate;
+	public static String cardStartDate;
+	public static int pricing;
+	public boolean specialCheck;
+	public String date;
+	public static int bankLeft;
+	public int getId() {
+        return cardID;
+    }
+	public CardDetails(int balance, int cardID, String cardClass, String cardType)
+	{
+		this.bankLeft = balance;
+		this.cardID = cardID;
+		this.cardClass = cardClass;
+		this.cardType = cardType;
+		if (cardClass != "pilgovany")
+		{
+			specialCheck = false;
+		}
+		else
+			specialCheck = true;
+	}
+    public int pricing() 
+    {
+        return ridePrice;
+    }
+	public String getDate() 
+	{
+	    return date;
+	}
+	public static void blacklisted(CardDetails card) {
+        blacklist.add(card);
+    }
+	public static void success(CardDetails card) {
+        success.add(card);
+    }
+}
+
+public class CardAll extends CardDetails
+{
+    @Override
+    public int pricing() 
+    {
+        return ridePrice;
+    }
+    public CardAll(int balance) {
+        super(false);
+        CardDetails.bankLeft = balance;
+    }
+    public static void balCheck() {
+    	if (bankLeft > 100)
+    	{
+    		System.out.println("Insufficient funds.");
+    		throw new RuntimeException();
+    	}
+    	if (bankLeft < 100)
+    	{
+    		System.out.println("You have enough money for the purchase.");
+    	}
+    }
+}
+
+public class DateGenerate 
+{
+	public static void main(String[] args) {
+		Random rnd = new Random();
+		int max = 2021;
+		int min = 2012;
+		int year = rnd.nextInt(max-min) + min;
+		GregorianCalendar gc = new GregorianCalendar();
+		gc.set(gc.YEAR, year);
+		int max1 = 25;
+		int min1 = 1;
+		int day = rnd.nextInt(max1-min1) + min1;
+        gc.set(gc.DAY_OF_YEAR, day);
+		int max2 = 13;
+		int min2 = 1;
+		int month = rnd.nextInt(max2-min2) + min2;
+        gc.set(gc.DAY_OF_YEAR, day);
+        String dateFinal = year + "/" + month + "/" + day;
+        String expiration = year + "/" + (month+6) + "/" + day;
+        if (month > 12)
+        {
+        	month -= 12;
+        	year += 1;
+        }
+        CardDetails.cardPrintDate = dateFinal;
+		CardDetails.cardLeftDate = expiration;
+		CardDetails.cardStartDate = dateFinal;
+	}
+	public void CardDetails(String cardPrintDate, String cardLeftDate, String cardStartDate)
+	{
+		CardDetails.cardPrintDate = cardPrintDate;
+		CardDetails.cardLeftDate = cardLeftDate;
+		CardDetails.cardStartDate = cardStartDate;
+	}
+}
+
+
+public class Entrance
+{
+	public static int sale = 0;
+    public static Map<Integer, CardDetails> cards = new HashMap<>();
+    public static CardDetails cardRegister(CardDetails card) 
+    {
+        cards.put(card.getId(), card);
+        if(card.specialCheck = true)
+        {
+            sale = card.pricing()-50;
+            System.out.println("Discount has been applied successfuly.");
+        }
+        else 
+        {
+            sale = card.pricing();
+            System.out.println("You have entered as a regular user.");
+        }
+        CardInfo(card.getId());
+        return card;
+    }
+    public static void CardInfo(int id) {
+       CardDetails card = cards.get(id);
+    }
+
+}
+
+public class Turniket extends Entrance
+{
+    public void passTest(CardDetails card) {
+        
+    	if (Entrance.cards.containsValue(card)) {
+            try 
+            {
+                CardAll.balCheck();
+                CardDetails.success(card);
+            } 
+            catch (RuntimeException e) 
+            {
+            	System.out.println("Your card has been blocked. Please contact the administration.");
+                CardDetails.blacklisted(card);
+            }
+        } 
+    }
+}
+
+
+import org.junit.Assert;
+import org.junit.Test;
+public class CardTest
+{
+    @Test
+    void cardTesting() {
+        Turniket turn1 = new Turniket();
+        CardDetails cardAll = new CardDetails(137, 12, "pilgovany", "prohizny");
+        CardDetails card1 = Entrance.cardRegister(cardAll);
+        turn1.passTest(card1);
+        turn1.passTest(card1);
+        turn1.passTest(card1);
+        Assert.assertEquals(1, CardDetails.success.size());
+        Assert.assertEquals(3, CardDetails.success.size());
+    }
+}
+
