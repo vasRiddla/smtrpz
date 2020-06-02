@@ -170,7 +170,7 @@ public class RoadDeploy
 
 public class JUnit {
 	@Test
-	public void getTotal()
+	public void getTotal() throws FullException
     {
 	Road road;
     Human fireman, policeman, person;
