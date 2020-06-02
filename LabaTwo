@@ -1,0 +1,52 @@
+import com.google.gson.Gson;
+import java.util.Random;
+
+public class Person {
+    static Random rand = new Random();
+	static int age = rand.nextInt(100);
+    static int Id;
+    static String surname;
+    Person(String name, int date)
+    {
+    	Id += 1;
+        surname = name;
+        age = date;
+    }
+    
+    @Override
+    public boolean equals(Object persona){
+    
+        if (persona == null)
+        {
+            return false;
+        }
+        else if (this == persona)
+        {
+            return true;
+        }
+        Person person = (Person) persona;
+        return surname.equals(Person.surname);
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return surname.hashCode() + age;
+    }
+    public String ToJson()
+    {
+        Gson gson = new Gson();
+        String json = gson.toJson(this);
+        return json;
+    }
+    
+    
+    
+    public static Person FromJson(String json)
+    {
+        Gson gson = new Gson();
+        Person test = gson.fromJson(json, Person.class);
+        return test;
+    }
+
+}
