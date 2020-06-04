@@ -1,23 +1,31 @@
 import java.util.ArrayList;
 import java.util.List;
-public class Vehicle<T>
+public class Vehicle<T extends Human>
 {
-	public List<T> occupants = new ArrayList<>();
+	public List<T> occupants = new ArrayList<>();//Являє строго типізований список об'єктів, доступних за індексом. Підтримує методи для пошуку за списком, виконання сортування і інших операцій зі списками.
 	public String type;
     public int seats;
     public int occupiedNum;
     public int freeNum;
-	public Vehicle(String type, int seats) {
+	public Vehicle(String type, int seats) 
+	{
         this.type = type;
         this.seats = seats;
     }
-    public int checkFree() {
+	public int checkSeats()
+	{
+		return seats;
+	}
+    public int checkFree() 
+    {
         return freeNum;
     }
-    public int checkOccupied() {
-        return occupiedNum;
+    public int checkOccupied() 
+    {
+        return occupants.size();
     }
-	public void newHuman(T Human) throws FullException {
+	public void newHuman(T Human) throws FullException
+	{
         if (checkFree() == 0)
         {
         	throw new FullException("The vehicle has run out of space.");
@@ -32,6 +40,7 @@ public class Vehicle<T>
     }
 	
 }
+
 
 public class Human {
     public int ID;
@@ -51,7 +60,7 @@ public class Human {
 	}
 }
 
-public class HumanFire {
+public class HumanFire extends Human {
     public int ID;
     public boolean squad;
     public int amount;
@@ -65,7 +74,7 @@ public class HumanFire {
     }
 }
 
-public class HumanPolice {
+public class HumanPolice extends Human {
     public int ID;
     public boolean squad;
     public int amount;
@@ -79,7 +88,7 @@ public class HumanPolice {
     }
 }
 
-public class Police<T extends Human> extends Car<T>
+public class Police extends Car<HumanPolice>
 {
 	Police(String type, int seats)
     {
@@ -95,7 +104,7 @@ public class Car<T extends Human> extends Vehicle<T>
     }
 }
 
-public class Bus<T extends Human> extends Vehicle<T>
+public class Bus extends Car<Human>
 {
     Bus(String type, int seats)
     {
@@ -103,7 +112,7 @@ public class Bus<T extends Human> extends Vehicle<T>
     }
 }
 
-public class Firetruck<T extends Human> extends Vehicle<T>
+public class Firetruck extends Car<HumanFire>
 {
     Firetruck(String type, int seats)
     {
@@ -117,19 +126,24 @@ public class FullException extends RuntimeException {
 	}
 }
 
-
 import java.util.ArrayList;
+import java.util.List;
 
 public class Road <T extends Vehicle> {
-    public ArrayList<Vehicle> carsDeployed = new ArrayList<>();
-    public int getTotal()
-    {
-    	int humanAmount = Human.get(0).amount();
-        return humanAmount;
+    public ArrayList<Vehicle> carsInRoad = new ArrayList<>();
+
+    public int getCountOfHumans() {
+        int sumPassengers = 0;
+        for (Vehicle vehicle : carsInRoad) {
+            sumPassengers+= vehicle.checkOccupied();
+        }
+        return sumPassengers;
     }
-    public void addCarToRoad(Vehicle cars)
-    {
-        carsDeployed.add(cars);
+    public int getTotalRoad() {
+        return carsInRoad.size();
+    }
+    public void addCarToRoad(Vehicle vehicle) {
+        carsInRoad.add(vehicle);
     }
 }
 
@@ -169,19 +183,25 @@ public class RoadDeploy
 }
 
 public class JUnit {
-	@Test
+	Road roadOne;
+    HumanFire firemanOne;
+	HumanPolice policemanOne;
+	Human personOne, personTwo, personThree;
+    Vehicle fire, polCar, taxi, bus;
+    @Test
 	public void getTotal() throws FullException
     {
-	Road road;
-    Human fireman, policeman, person;
-    Vehicle fire, polCar, taxi, bus;
-    fire.newHuman(fireman);
-    polCar.newHuman(policeman);
-    bus.newHuman(person);
-    taxi.newHuman(person);
-    road.addCarToRoad(polCar);
-    road.addCarToRoad(taxi);
-    road.addCarToRoad(bus);
-    assertEquals(3, road.getTotal());
+    roadOne = new Road();
+    firemanOne = new HumanFire(3, true);
+    policemanOne = new HumanPolice(7, false);
+    fire = new Firetruck("B5", 3);
+    polCar = new Police("C8", 6);
+    roadOne.addCarToRoad(polCar);
+    roadOne.addCarToRoad(fire);
+    fire.newHuman(firemanOne);
+    fire.newHuman(personTwo);
+    bus.newHuman(personTwo);
+    assertEquals(3, roadOne.getTotalRoad());
     }
 }
+
