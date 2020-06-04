@@ -141,12 +141,12 @@ public class JUnit {
                 {
                         try 
                         {
-							          thread2.join();
-					            	} 
+			thread2.join();
+			} 
                         catch (InterruptedException e) 
                         {
-							          e.printStackTrace();
-					            	}
+			e.printStackTrace();
+			}
                 }
             }
             int result = bank.coinTotal();
