@@ -12,7 +12,6 @@ public class Person {
         surname = name;
         age = date;
     }
-    
     @Override
     public boolean equals(Object persona){
     
@@ -27,7 +26,6 @@ public class Person {
         Person person = (Person) persona;
         return surname.equals(Person.surname);
     }
-    
     @Override
     public int hashCode()
     {
@@ -36,17 +34,28 @@ public class Person {
     public String ToJson()
     {
         Gson gson = new Gson();
-        String json = gson.toJson(this);
+        String json = gson.toJson(this); //інструментальні засоби Gson дозволяють перетворювати рядки JSON в об'єкти Java (розбір json) і перетворювати об'єкти Java в рядки JSON.
         return json;
     }
-    
-    
-    
     public static Person FromJson(String json)
     {
         Gson gson = new Gson();
-        Person test = gson.fromJson(json, Person.class);
-        return test;
+        Person Bob = gson.fromJson(json, Person.class);//Ця функція та її методи зчитують вміст у форматі JSON та де-серіалізують його на R-об’єкти.
+        return Bob;
     }
+}
 
+import org.junit.Assert;
+import org.junit.jupiter.api.Test;
+import com.google.gson.Gson;
+
+public class PersonTest {
+	@Test
+    	void personTest() {
+        Person p1 = new Person("Bob", 25);
+        Gson gson = new Gson();
+        String json = gson.toJson(this);
+        Person person = gson.fromJson(json, Person.class);
+        Assert.assertEquals(p1, person);
+    }
 }
