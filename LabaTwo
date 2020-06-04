@@ -34,13 +34,13 @@ public class Person {
     public String ToJson()
     {
         Gson gson = new Gson();
-        String json = gson.toJson(this); //інструментальні засоби Gson дозволяють перетворювати рядки JSON в об'єкти Java (розбір json) і перетворювати об'єкти Java в рядки JSON.
+        String json = gson.toJson(this); 
         return json;
     }
     public static Person FromJson(String json)
     {
         Gson gson = new Gson();
-        Person Bob = gson.fromJson(json, Person.class);//Ця функція та її методи зчитують вміст у форматі JSON та де-серіалізують його на R-об’єкти.
+        Person Bob = gson.fromJson(json, Person.class);
         return Bob;
     }
 }
